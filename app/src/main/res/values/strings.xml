@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="mi_alacena">Mi Alacena</string>
+    <string name="buscar_productos">Buscar productos...</string>
+    <string name="todos">Todos</string>
+    <string name="bebidas">Bebidas</string>
+    <string name="abarrotes">Abarrotes</string>
+    <string name="pastas">Pastas</string>
+    <string name="legumbres">Legumbres</string>
+    <string name="otros">Otros</string>
+    <string name="enlatados">Enlatados</string>
+    <string name="agregar_manualmente">Agregar manualmente</string>
+    <string name="actualizar_producto">Actualizar Producto</string>
+    <string name="cambiar_imagen">Cambiar Imagen</string>
+    <string name="vista_previa_de_la_imagen_del_producto">Vista previa de la imagen del producto</string>
+    <string name="c_digo_de_barras_manual">Código de Barras (Manual)</string>
+    <string name="stock_minimo_alerta_de_compra">Stock Mínimo (Alerta de Compra)</string>
+    <string name="stock_actual_n_de_paquetes_unidades">Stock Actual (N° de paquetes/unidades)</string>
+    <string name="unidad_ej_lt">Unidad (Ej: Lt)</string>
+    <string name="tama_o_del_paquete_ej_1">Tamaño del Paquete (Ej: 1)</string>
+    <string name="categor_a">Categoría</string>
+    <string name="marca">Marca</string>
+    <string name="nombre_del_producto">Nombre del Producto</string>
+    <string name="modificar_producto">Modificar Producto</string>
+    <string name="editar">Editar</string>
+</resources>
