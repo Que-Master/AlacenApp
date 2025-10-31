@@ -39,9 +39,8 @@ public class FirebaseRepository {
         transaccionesRef = FirebaseDatabase.getInstance().getReference("transacciones");
     }
 
-    // ===============================================================
+
     // LEER PRODUCTOS
-    // ===============================================================
     public void leerProductos(OnProductosListener listener) {
         DatabaseReference refProductos = FirebaseDatabase.getInstance().getReference("productos");
         DatabaseReference refDetalles = FirebaseDatabase.getInstance().getReference("productos_detalle");
@@ -135,20 +134,30 @@ public class FirebaseRepository {
         if (imagenUri != null) {
             storageRef.putFile(imagenUri)
                     .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
-                        // Guarda la URL final de Firebase Storage
+                        // Guardar imagen + producto
                         producto.setImagenUrl(downloadUri.toString());
                         guardarEstructuraCorrecta(producto, timestamp);
+
+                        // Registrar transacción de creación
+                        registrarTransaccion("creacion", producto);
                     }))
                     .addOnFailureListener(e -> {
                         Log.e("FirebaseRepo", "Error subiendo imagen: " + e.getMessage());
                         producto.setImagenUrl("");
                         guardarEstructuraCorrecta(producto, timestamp);
+
+                        // Registrar transacción incluso si falla la imagen
+                        registrarTransaccion("creacion", producto);
                     });
         } else {
             producto.setImagenUrl("");
             guardarEstructuraCorrecta(producto, timestamp);
+
+            // Registrar transacción aunque no haya imagen
+            registrarTransaccion("creacion", producto);
         }
     }
+
 
 
     private void guardarProducto(Producto producto, long timestamp) {
