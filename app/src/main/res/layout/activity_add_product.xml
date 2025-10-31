@@ -13,26 +13,28 @@
         android:layout_height="wrap_content"
         android:padding="24dp">
 
+        <!-- Título -->
         <TextView
             android:id="@+id/text_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Agregar Nuevo Producto"
-            android:textSize="28sp"
+            android:text="Agregar nuevo producto"
+            android:textSize="26sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Nombre -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_name"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:hint="Nombre del Producto"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:hint="Nombre del producto"
+            app:layout_constraintTop_toBottomOf="@id/text_title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_title">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_name"
@@ -41,6 +43,7 @@
                 android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Marca -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_brand"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -48,9 +51,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="Marca"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/input_layout_name"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/input_layout_name">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_brand"
@@ -59,112 +62,95 @@
                 android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Categoría -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_category"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Categoría"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/input_layout_brand">
-
-            <AutoCompleteTextView
-                android:id="@+id/dropdown_category"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                tools:text="Abarrotes" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/input_layout_package_size"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:hint="Tamaño del Paquete (Ej: 500)"
-            app:layout_constraintEnd_toStartOf="@id/input_layout_unit"
+            android:hint="Categoría"
+            app:layout_constraintTop_toBottomOf="@id/input_layout_brand"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/input_layout_category">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_package_size"
+                android:id="@+id/edit_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal" />
+                android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Cantidad -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/input_layout_unit"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:id="@+id/input_layout_cantidad"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:hint="Unidad (Ej: gr, Litros)"
-            app:layout_constraintBottom_toBottomOf="@id/input_layout_package_size"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/input_layout_package_size"
-            app:layout_constraintTop_toTopOf="@id/input_layout_package_size">
+            android:layout_marginTop="16dp"
+            android:hint="Cantidad (ej: 500 ml)"
+            app:layout_constraintTop_toBottomOf="@id/input_layout_category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-            <AutoCompleteTextView
-                android:id="@+id/dropdown_unit"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_cantidad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="none"
-                tools:text="gr" />
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Stock inicial -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_stock"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Stock Inicial (N° de paquetes/unidades)"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:hint="Stock inicial (n° de unidades)"
+            app:layout_constraintTop_toBottomOf="@id/input_layout_cantidad"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/input_layout_package_size">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_stock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:maxLength="3" />
+                tools:text="5" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Stock mínimo -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_min_stock"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Stock Mínimo (Alerta de Compra)"
-            app:helperText="Generar alerta si el stock es menor a este número"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:hint="Stock mínimo (alerta de compra)"
+            app:layout_constraintTop_toBottomOf="@id/input_layout_stock"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/input_layout_stock">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_min_stock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number" />
+                android:inputType="number"
+                tools:text="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Código de barras -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_barcode"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Código de Barras (Manual)"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:hint="Código de barras"
+            app:layout_constraintTop_toBottomOf="@id/input_layout_min_stock"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/input_layout_min_stock">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_barcode"
@@ -174,16 +160,17 @@
                 android:maxLength="13" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Imagen -->
         <LinearLayout
             android:id="@+id/layout_image"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/input_layout_barcode"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/input_layout_barcode">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <ImageView
                 android:id="@+id/image_preview"
@@ -191,29 +178,29 @@
                 android:layout_height="64dp"
                 android:scaleType="centerCrop"
                 android:background="#EEEEEE"
-                android:contentDescription="Vista previa de la imagen del producto" />
+                android:contentDescription="Vista previa del producto" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_select_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Seleccionar Imagen"
+                android:text="Seleccionar imagen"
                 style="@style/Widget.MaterialComponents.Button.TextButton" />
         </LinearLayout>
 
+        <!-- Botón Guardar -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save_product"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Guardar Producto"
+            android:text="Guardar producto"
             android:paddingVertical="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_image"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
