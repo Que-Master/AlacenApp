@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.myapplication.DetallesActivity;
 import com.example.myapplication.EditProductActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.models.Producto;
@@ -55,7 +56,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
 
         if (imagenUrl != null && !imagenUrl.isEmpty()) {
             if (imagenUrl.startsWith("content://") || imagenUrl.startsWith("file://")) {
-                // 📁 Imagen local
+                // Imagen local
                 Glide.with(context)
                         .load(Uri.parse(imagenUrl))
                         .placeholder(R.drawable.placeholder_image)
@@ -74,6 +75,13 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         } else {
             holder.imageProducto.setImageResource(R.drawable.placeholder_image);
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, DetallesActivity.class);
+            intent.putExtra("codigo_barras", producto.getCodigoBarras());
+            context.startActivity(intent);
+        });
+
 
         // Botón editar
         holder.btnEditar.setOnClickListener(v -> {
