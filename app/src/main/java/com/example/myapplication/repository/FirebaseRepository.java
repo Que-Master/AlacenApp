@@ -1,6 +1,7 @@
 package com.example.myapplication.repository;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
@@ -54,44 +55,28 @@ public class FirebaseRepository {
                         List<Producto> lista = new ArrayList<>();
 
                         for (DataSnapshot snapProd : snapshotProductos.getChildren()) {
-                            String codigo = snapProd.getKey();
                             Producto p = new Producto();
 
-                            // Leer campos del nodo "productos"
-                            p.setCodigoBarras(
-                                    snapProd.child("codigo_barras").getValue(String.class) != null
-                                            ? snapProd.child("codigo_barras").getValue(String.class)
-                                            : snapProd.child("codigoBarras").getValue(String.class)
-                            );
+                            //Leer los campos del nodo "productos"
+                            String codigo = snapProd.child("codigo_barras").getValue(String.class);
+                            if (codigo == null || codigo.isEmpty()) {
+                                codigo = snapProd.getKey(); // fallback
+                            }
+                            p.setCodigoBarras(codigo);
                             p.setNombre(snapProd.child("nombre").getValue(String.class));
                             p.setStock(snapProd.child("stock").getValue(Integer.class));
 
-                            // Buscar información adicional en "productos_detalle"
-                            DataSnapshot snapDetalle = snapshotDetalles.child(codigo);
+                            //Buscar detalles usando el mismo código de barras (no el key del nodo)
+                            DataSnapshot snapDetalle = snapshotDetalles.child(p.getCodigoBarras());
                             if (snapDetalle.exists()) {
-                                String imagen = snapDetalle.child("imagen_url").getValue(String.class);
-                                p.setImagenUrl(imagen);
-
-                                String cantidad = snapDetalle.child("cantidad").getValue(String.class);
-                                p.setCantidad(cantidad);
-
-                                String categoria = snapDetalle.child("categoria").getValue(String.class);
-                                p.setCategoria(categoria);
-
-                                String marca = snapDetalle.child("marca").getValue(String.class);
-                                p.setMarca(marca);
-
+                                p.setImagenUrl(snapDetalle.child("imagen_url").getValue(String.class));
+                                p.setCantidad(snapDetalle.child("cantidad").getValue(String.class));
+                                p.setCategoria(snapDetalle.child("categoria").getValue(String.class));
+                                p.setMarca(snapDetalle.child("marca").getValue(String.class));
 
                                 Long stockMinimoLong = snapDetalle.child("stockMinimo").getValue(Long.class);
                                 p.setStockMinimo(stockMinimoLong != null ? stockMinimoLong.intValue() : 0);
-
-                                if (p.getCodigoBarras() == null || p.getCodigoBarras().isEmpty()) {
-                                    String codigoDetalle = snapDetalle.child("codigo_barras").getValue(String.class);
-                                    p.setCodigoBarras(codigoDetalle);
-                                }
                             }
-
-
 
                             lista.add(p);
                         }
@@ -132,31 +117,64 @@ public class FirebaseRepository {
                 .getReference("productos/" + codigo + ".jpg");
 
         if (imagenUri != null) {
-            storageRef.putFile(imagenUri)
-                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
-                        // Guardar imagen + producto
-                        producto.setImagenUrl(downloadUri.toString());
-                        guardarEstructuraCorrecta(producto, timestamp);
+            try {
+                context.getContentResolver().takePersistableUriPermission(
+                        imagenUri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                );
+            } catch (Exception e) {
+                Log.w("FirebaseRepo", "⚠️ No se pudo persistir permiso: " + e.getMessage());
+            }
 
-                        // Registrar transacción de creación
-                        registrarTransaccion("creacion", producto);
-                    }))
-                    .addOnFailureListener(e -> {
-                        Log.e("FirebaseRepo", "Error subiendo imagen: " + e.getMessage());
-                        producto.setImagenUrl("");
-                        guardarEstructuraCorrecta(producto, timestamp);
+            try {
+                java.io.InputStream inputStream = context.getContentResolver().openInputStream(imagenUri);
+                java.io.File tempFile = java.io.File.createTempFile("upload_", ".jpg", context.getCacheDir());
+                java.io.OutputStream outputStream = new java.io.FileOutputStream(tempFile);
 
-                        // Registrar transacción incluso si falla la imagen
-                        registrarTransaccion("creacion", producto);
-                    });
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+                inputStream.close();
+                outputStream.close();
+
+                Uri fileUri = Uri.fromFile(tempFile);
+
+                storageRef.putFile(fileUri)
+                        .addOnProgressListener(snapshot -> {
+                            double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
+                            Log.d("FirebaseRepo", "📤 Subiendo imagen... " + (int) progress + "%");
+                        })
+                        .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                            producto.setImagenUrl(downloadUri.toString());
+                            Log.d("FirebaseRepo", "✅ Imagen subida correctamente: " + downloadUri);
+                            guardarEstructuraCorrecta(producto, timestamp);
+                            registrarTransaccion("creacion", producto);
+                        }))
+                        .addOnFailureListener(e -> {
+                            Log.e("FirebaseRepo", "❌ Error subiendo imagen: " + e.getMessage());
+                            producto.setImagenUrl("");
+                            guardarEstructuraCorrecta(producto, timestamp);
+                            registrarTransaccion("creacion", producto);
+                        });
+
+            } catch (Exception e) {
+                Log.e("FirebaseRepo", "❌ Error procesando imagen local: " + e.getMessage());
+                producto.setImagenUrl("");
+                guardarEstructuraCorrecta(producto, timestamp);
+                registrarTransaccion("creacion", producto);
+            }
+
         } else {
             producto.setImagenUrl("");
             guardarEstructuraCorrecta(producto, timestamp);
-
-            // Registrar transacción aunque no haya imagen
             registrarTransaccion("creacion", producto);
+            Log.w("FirebaseRepo", "⚠️ Producto guardado sin imagen");
         }
     }
+
+
 
 
 
@@ -172,7 +190,6 @@ public class FirebaseRepository {
 
 
     // ACTUALIZAR PRODUCTO
-
     public void actualizarProducto(Producto producto, Uri nuevaImagenUri) {
         String codigo = producto.getCodigoBarras();
         if (codigo == null || codigo.isEmpty()) {
@@ -225,7 +242,6 @@ public class FirebaseRepository {
 
 
     // ELIMINAR PRODUCTO
-
     public void eliminarProducto(String codigoBarras) {
         if (codigoBarras == null || codigoBarras.isEmpty()) {
             Log.e("FirebaseRepo", "❌ Código vacío, no se puede eliminar.");
@@ -313,9 +329,9 @@ public class FirebaseRepository {
         Map<String, Object> detalles = new HashMap<>();
         detalles.put("codigo_barras", producto.getCodigoBarras());
         detalles.put("nombre", producto.getNombre());
-        detalles.put("marca", producto.getMarca());         // ✅ Se guarda la marca
-        detalles.put("categoria", producto.getCategoria()); // ✅ Se guarda la categoría
-        detalles.put("cantidad", producto.getCantidad());   // ✅ Se guarda la cantidad
+        detalles.put("marca", producto.getMarca());
+        detalles.put("categoria", producto.getCategoria());
+        detalles.put("cantidad", producto.getCantidad());
         detalles.put("stock", producto.getStock());
         detalles.put("stockMinimo", producto.getStockMinimo());
         detalles.put("imagen_url", producto.getImagenUrl());

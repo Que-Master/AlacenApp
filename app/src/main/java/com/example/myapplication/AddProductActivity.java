@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,10 +17,6 @@ import com.example.myapplication.repository.FirebaseRepository;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 public class AddProductActivity extends AppCompatActivity {
 
@@ -32,15 +29,26 @@ public class AddProductActivity extends AppCompatActivity {
     private final ActivityResultLauncher<String> imagePickerLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
                 if (uri != null) {
-                    imageUri = copiarImagenLocal(uri);
-                    if (imageUri != null) {
-                        imagePreview.setImageURI(imageUri);
-                        Log.d("AddProduct", "✅ Imagen copiada a: " + imageUri);
-                    } else {
-                        Toast.makeText(this, "Error al copiar la imagen", Toast.LENGTH_SHORT).show();
+                    imageUri = uri;
+                    imagePreview.setImageURI(uri);
+                    Log.d("AddProduct", "✅ Imagen seleccionada: " + uri);
+
+                    // Mantener permiso de lectura persistente
+                    try {
+                        getContentResolver().takePersistableUriPermission(
+                                uri,
+                                Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        );
+                    } catch (Exception e) {
+                        Log.w("AddProduct", "⚠️ No se pudo persistir permiso: " + e.getMessage());
                     }
+
+                } else {
+                    Toast.makeText(this, "No se seleccionó ninguna imagen", Toast.LENGTH_SHORT).show();
                 }
             });
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,26 +102,5 @@ public class AddProductActivity extends AppCompatActivity {
         repository.agregarProducto(producto, imageUri);
         Toast.makeText(this, "⏳ Subiendo producto...", Toast.LENGTH_SHORT).show();
         finish();
-    }
-
-    private Uri copiarImagenLocal(Uri originalUri) {
-        try {
-            InputStream inputStream = getContentResolver().openInputStream(originalUri);
-            File tempFile = new File(getCacheDir(), "temp_image_" + System.currentTimeMillis() + ".jpg");
-            OutputStream outputStream = new FileOutputStream(tempFile);
-
-            byte[] buffer = new byte[4096];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-
-            inputStream.close();
-            outputStream.close();
-            return Uri.fromFile(tempFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }

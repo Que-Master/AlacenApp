@@ -3,6 +3,7 @@ package com.example.myapplication.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,13 +51,26 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         holder.textMarca.setText("Marca: " + producto.getMarca());
         holder.textStock.setText("Stock: " + producto.getStock());
 
-        if (producto.getImagenUrl() != null && !producto.getImagenUrl().isEmpty()) {
-            Glide.with(context)
-                    .load(producto.getImagenUrl())
-                    .placeholder(R.drawable.placeholder_image)
-                    .error(R.drawable.error_image)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(holder.imageProducto);
+        String imagenUrl = producto.getImagenUrl();
+
+        if (imagenUrl != null && !imagenUrl.isEmpty()) {
+            if (imagenUrl.startsWith("content://") || imagenUrl.startsWith("file://")) {
+                // 📁 Imagen local
+                Glide.with(context)
+                        .load(Uri.parse(imagenUrl))
+                        .placeholder(R.drawable.placeholder_image)
+                        .error(R.drawable.error_image)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(holder.imageProducto);
+            } else {
+                // Imagen en Firebase Storage
+                Glide.with(context)
+                        .load(imagenUrl)
+                        .placeholder(R.drawable.placeholder_image)
+                        .error(R.drawable.error_image)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(holder.imageProducto);
+            }
         } else {
             holder.imageProducto.setImageResource(R.drawable.placeholder_image);
         }
@@ -80,7 +94,6 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
                     .setNegativeButton("No", null)
                     .show();
         });
-
     }
 
     @Override
