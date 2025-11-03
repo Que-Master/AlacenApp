@@ -1,29 +1,74 @@
 <resources>
-    <string name="app_name">My Application</string>
+
+    <!-- General -->
+    <string name="app_name">AlacenApp</string>
+
+    <!-- MainActivity -->
+    <string name="inicio">inicio</string>
+    <string name="_0">0</string>
+    <string name="ver_alacena">Ver Alacena</string>
+    <string name="lista_de_compras">Lista de Compras</string>
+    <string name="faltantes_por_comprar">Faltantes / por comprar</string>
+    <string name="productos_totales">Productos totales</string>
+    <string name="utimas_acciones">Últimas acciones</string>
+
+    <!-- AlacenaActivity -->
     <string name="mi_alacena">Mi Alacena</string>
     <string name="buscar_productos">Buscar productos...</string>
+    <string name="agregar">Agregar</string>
     <string name="todos">Todos</string>
     <string name="bebidas">Bebidas</string>
     <string name="abarrotes">Abarrotes</string>
     <string name="pastas">Pastas</string>
     <string name="legumbres">Legumbres</string>
-    <string name="otros">Otros</string>
     <string name="enlatados">Enlatados</string>
+    <string name="otros">Otros</string>
 
-    <string name="agregar_manualmente">Agregar manualmente</string>
-    <string name="actualizar_producto">Actualizar Producto</string>
-    <string name="cambiar_imagen">Cambiar Imagen</string>
-    <string name="vista_previa_de_la_imagen_del_producto">Vista previa de la imagen del producto</string>
-    <string name="codigo_de_barras_manual">Código de Barras (Manual)</string>
-    <string name="stock_minimo_alerta_de_compra">Stock Mínimo (Alerta de Compra)</string>
-    <string name="stock_actual_n_de_paquetes_unidades">Stock Actual (N° de paquetes/unidades)</string>
-    <string name="unidad_ej_lt">Unidad (Ej: Lt)</string>
-    <string name="tama_o_del_paquete_ej_1">Tamaño del Paquete (Ej: 1)</string>
-    <string name="categor_a">Categoría</string>
-    <string name="marca">Marca</string>
+    <!-- ComprasActivity -->
+    <string name="lista_de_compras_titulo">Lista de Compras</string>
+    <string name="buscar_producto">Buscar producto.</string>
+
+    <!-- AddProductActivity -->
+    <string name="agregar_nuevo_producto">agregar nuevo producto</string>
     <string name="nombre_del_producto">Nombre del Producto</string>
+    <string name="marca">Marca</string>
+    <string name="categoria">Categoría</string>
+    <string name="cantidad_ejemplo">Cantidad (ej: 500 ml)</string>
+    <string name="stock_inicial_n_de_unidades">Stock inicial (n° de unidades)</string>
+    <string name="stock_minimo_alerta_de_compra">Stock mínimo (alerta de compra)</string>
+    <string name="codigo_de_barras">Código de barras</string>
+    <string name="vista_previa_del_producto">Vista previa del producto</string>
+    <string name="seleccionar_imagen">Seleccionar imagen</string>
+    <string name="guardar_producto">Guardar producto</string>
+
+    <!-- ✏EditProductActivity -->
     <string name="modificar_producto">Modificar Producto</string>
+    <string name="cambiar_imagen">Cambiar Imagen</string>
+    <string name="actualizar_producto">Actualizar Producto</string>
+    <string name="stock_actual_n_de_unidades">Stock actual (n° de unidades)</string>
+
+    <!-- DetallesActivity -->
+    <string name="cantidad">Cantidad</string>
+    <string name="stock_actual">Stock actual</string>
+    <string name="stock_minimo">Stock mínimo</string>
+    <string name="codigo_de_barras_manual">Código de Barras (Manual)</string>
+    <string name="imagen_del_producto">imagen del producto\n</string>
     <string name="editar">Editar</string>
-    <string name="stock_inicial_n_de_paquetes_unidades">Stock Inicial (N° de paquetes/unidades)</string>
-    <string name="utimas_acciones">Últimas acciones</string>
+    <string name="eliminar">Eliminar</string>
+
+    <!-- ItemAlacena -->
+    <string name="nombre_del_producto_item">Nombre del producto</string>
+    <string name="marca_ejemplo">Marca: Ejemplo</string>
+    <string name="stock_ejemplo">Stock: 5</string>
+    <string name="editar_producto">Editar producto</string>
+    <string name="eliminar_producto">Eliminar producto</string>
+
+    <!-- ItemShoppingList -->
+    <string name="nombre_producto_lista">Nombre del producto</string>
+    <string name="detalle_categoria_unidades">Categoría • 2 unidades</string>
+    <string name="movimiento_de_stock">Movimiento de stock</string>
+    <string name="tipo_de_accion">Tipo de acción</string>
+    <string name="stock_5">stock: 5</string>
+
+
 </resources>

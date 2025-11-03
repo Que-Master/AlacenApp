@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:layout_marginTop="24dp"
-        android:text="Inicio"
+        android:text="@string/inicio"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,14 +55,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Productos totales"
+                    android:text="@string/productos_totales"
                     android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/text_total_productos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="@string/_0"
                     android:textColor="#4CAF50"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -94,7 +94,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Faltantes / por comprar"
+                    android:text="@string/faltantes_por_comprar"
                     android:textSize="14sp"
                     android:layout_marginTop="4dp" />
 
@@ -102,7 +102,7 @@
                     android:id="@+id/text_productos_agotados"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="@string/_0"
                     android:textColor="#F44336"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -129,7 +129,7 @@
             android:layout_marginEnd="8dp"
             android:backgroundTint="#5E35B1"
             android:textColor="@android:color/white"
-            android:text="Ver Alacena"
+            android:text="@string/ver_alacena"
             android:textSize="15sp"
             android:gravity="center"
             app:cornerRadius="16dp"
@@ -153,7 +153,7 @@
             android:layout_marginStart="8dp"
             android:backgroundTint="#7E57C2"
             android:textColor="@android:color/white"
-            android:text="Lista de compras"
+            android:text="@string/lista_de_compras"
             android:textSize="15sp"
             android:gravity="center"
             app:cornerRadius="16dp"
@@ -168,9 +168,6 @@
             android:textAlignment="center"
             app:iconPadding="6dp" />
     </LinearLayout>
-
-
-
 
     <TextView
         android:id="@+id/text_history_title"

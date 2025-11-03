@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.adapters.AdapterTransacciones;
+import com.example.myapplication.adapters.TransaccionesAdapter;
 import com.example.myapplication.models.Producto;
 import com.example.myapplication.models.Transaccion;
 import com.example.myapplication.repository.FirebaseRepository;
@@ -31,8 +31,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private AdapterTransacciones adapter;
-    private List<Transaccion> lista;
+    private TransaccionesAdapter adapter;
+    private final List<Transaccion> lista = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,33 +78,31 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_history);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        lista = new ArrayList<>();
-        adapter = new AdapterTransacciones(lista);
+        adapter = new TransaccionesAdapter(lista);
         recyclerView.setAdapter(adapter);
 
-
-        // LECTURA DE TRANSACCIONES
+        // LECTURA DE SOLO LAS 25 ÚLTIMAS TRANSACCIONES
         DatabaseReference transRef = database.getReference("transacciones");
+        transRef.orderByChild("timestamp").limitToLast(25)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        lista.clear(); // usamos la lista final declarada arriba
+                        for (DataSnapshot item : snapshot.getChildren()) {
+                            Transaccion t = item.getValue(Transaccion.class);
+                            if (t != null) lista.add(t);
+                        }
 
-        transRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                lista.clear();
-                for (DataSnapshot item : snapshot.getChildren()) {
-                    Transaccion t = item.getValue(Transaccion.class);
-                    if (t != null) lista.add(t);
-                }
-                // Ordenar de más reciente a más antiguo
-                Collections.sort(lista, (a, b) -> Long.compare(b.getTimestamp(), a.getTimestamp()));
-                adapter.notifyDataSetChanged();
-            }
+                        // Ordenar de más reciente a más antigua
+                        Collections.sort(lista, (a, b) -> Long.compare(b.getTimestamp(), a.getTimestamp()));
+                        adapter.notifyDataSetChanged();
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase", "❌ Error al leer transacciones: " + error.getMessage());
-            }
-        });
-
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("Firebase", "❌ Error al leer transacciones: " + error.getMessage());
+                    }
+                });
 
         // CONTADORES DE PRODUCTOS
         TextView textTotalProductos = findViewById(R.id.text_total_productos);
@@ -113,32 +112,35 @@ public class MainActivity extends AppCompatActivity {
 
         repo.leerProductos(new FirebaseRepository.OnProductosListener() {
             @Override
-            public void onProductosObtenidos(final List<Producto> listaProductos) {
-                final int productosTotales = listaProductos.size(); // número total de productos distintos
-                int faltantesTemp = 0; // temporal para contar los sin stock
+            public void onProductosObtenidos(List<Producto> listaProductos) {
+                int disponibles = 0;
+                int faltantes = 0;
 
-                for (final Producto p : listaProductos) {
-                    if (p.getStock() <= 0) {
-                        faltantesTemp++;
+                for (Producto p : listaProductos) {
+                    // Contar productos disponibles (stock mayor a 0)
+                    if (p.getStock() > 0) {
+                        disponibles++;
+                    }
+
+                    // Contar faltantes o bajo stock
+                    if (p.getStock() == 0 || p.getStock() < p.getStockMinimo()) {
+                        faltantes++;
                     }
                 }
 
-                final int productosFaltantes = faltantesTemp;
+                final int totalDisponibles = disponibles;
+                final int totalFaltantes = faltantes;
 
                 runOnUiThread(() -> {
-                    final TextView textTotalProductos = findViewById(R.id.text_total_productos);
-                    final TextView textProductosAgotados = findViewById(R.id.text_productos_agotados);
-
-                    textTotalProductos.setText(String.valueOf(productosTotales));
-                    textProductosAgotados.setText(String.valueOf(productosFaltantes));
+                    textTotalProductos.setText(String.valueOf(totalDisponibles));
+                    textProductosAgotados.setText(String.valueOf(totalFaltantes));
                 });
             }
 
             @Override
-            public void onError(final String error) {
+            public void onError(String error) {
                 Log.e("Firebase", "Error al contar productos: " + error);
             }
         });
-
     }
 }

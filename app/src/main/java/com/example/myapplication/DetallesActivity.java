@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -27,6 +28,8 @@ import com.google.firebase.database.ValueEventListener;
 
 public class DetallesActivity extends AppCompatActivity {
 
+
+    private TextView textNombre;
     private EditText textMarca, textCategoria, textCantidad,
             textStock, textStockMinimo, textCodigoBarras;
     private ImageView imageProduct;
@@ -45,6 +48,7 @@ public class DetallesActivity extends AppCompatActivity {
         repository = new FirebaseRepository(this);
 
         // Vistas
+        textNombre = findViewById(R.id.text_nombre);
         imageProduct = findViewById(R.id.image_product);
         textMarca = findViewById(R.id.text_marca);
         textCategoria = findViewById(R.id.text_categoria);
@@ -87,6 +91,7 @@ public class DetallesActivity extends AppCompatActivity {
 
                 productoActual = snapshot.getValue(Producto.class);
                 if (productoActual != null) {
+                    textNombre.setText(productoActual.getNombre());
                     textMarca.setText(productoActual.getMarca());
                     textCategoria.setText(productoActual.getCategoria());
                     textCantidad.setText(productoActual.getCantidad());

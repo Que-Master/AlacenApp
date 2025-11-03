@@ -19,14 +19,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class AdapterTransacciones extends RecyclerView.Adapter<AdapterTransacciones.ViewHolder> {
+public class TransaccionesAdapter extends RecyclerView.Adapter<TransaccionesAdapter.ViewHolder> {
 
     private final List<Transaccion> lista;
 
-    public AdapterTransacciones(List<Transaccion> lista) {
+    public TransaccionesAdapter(List<Transaccion> lista) {
         // Ordenar de más reciente a más antigua
         Collections.reverse(lista);
-        this.lista = lista;
+            this.lista = lista;
     }
 
     @NonNull

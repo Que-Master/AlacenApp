@@ -1,64 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp" >
+    android:padding="16dp"
+    tools:context=".ComprasActivity">
 
+    <!-- Título -->
     <TextView
         android:id="@+id/text_title_shopping"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:text="Lista de Compras"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/lista_de_compras"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Barra de búsqueda -->
     <EditText
-        android:id="@+id/edit_search_shopping"
-        android:layout_width="334dp"
-        android:layout_height="48dp"
+        android:id="@+id/search_shopping"
+        android:layout_width="345dp"
+        android:layout_height="46dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_search_rounded"
         android:drawableStart="@drawable/ic_search"
-        android:drawableEnd="@drawable/ic_add"
         android:drawablePadding="8dp"
-        android:hint="Buscar o agregar producto..."
-        android:padding="12dp"
+        android:hint="@string/buscar_producto"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:paddingHorizontal="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_title_shopping" />
 
+    <!-- Lista de productos -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_shopping_list"
-        android:layout_width="361dp"
-        android:layout_height="508dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_move_to_alacena"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_search_shopping"
-        tools:listitem="@layout/item_shopping_list" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_move_to_alacena"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Mover a Alacena (0 ítems)"
-        android:textSize="16sp"
-        app:icon="@drawable/ic_alacena"
-        app:iconGravity="textStart"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        app:cornerRadius="12dp"
+        app:layout_constraintTop_toBottomOf="@id/search_shopping"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        tools:listitem="@layout/item_shopping_list" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

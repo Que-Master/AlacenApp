@@ -18,7 +18,7 @@
             android:id="@+id/text_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Agregar nuevo producto"
+            android:text="@string/agregar_nuevo_producto"
             android:textSize="26sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +31,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:hint="Nombre del producto"
+            android:hint="@string/nombre_del_producto"
             app:layout_constraintTop_toBottomOf="@id/text_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -50,7 +50,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Marca"
+            android:hint="@string/marca"
             app:layout_constraintTop_toBottomOf="@id/input_layout_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -69,7 +69,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Categoría"
+            android:hint="@string/categoria"
             app:layout_constraintTop_toBottomOf="@id/input_layout_brand"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -88,7 +88,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Cantidad (ej: 500 ml)"
+            android:hint="@string/cantidad_ejemplo"
             app:layout_constraintTop_toBottomOf="@id/input_layout_category"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -107,7 +107,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Stock inicial (n° de unidades)"
+            android:hint="@string/stock_inicial_n_de_unidades"
             app:layout_constraintTop_toBottomOf="@id/input_layout_cantidad"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -127,7 +127,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Stock mínimo (alerta de compra)"
+            android:hint="@string/stock_minimo_alerta_de_compra"
             app:layout_constraintTop_toBottomOf="@id/input_layout_stock"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -147,7 +147,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Código de barras"
+            android:hint="@string/codigo_de_barras"
             app:layout_constraintTop_toBottomOf="@id/input_layout_min_stock"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -178,14 +178,14 @@
                 android:layout_height="64dp"
                 android:scaleType="centerCrop"
                 android:background="#EEEEEE"
-                android:contentDescription="Vista previa del producto" />
+                android:contentDescription="@string/vista_previa_del_producto" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_select_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Seleccionar imagen"
+                android:text="@string/seleccionar_imagen"
                 style="@style/Widget.MaterialComponents.Button.TextButton" />
         </LinearLayout>
 
@@ -195,7 +195,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Guardar producto"
+            android:text="@string/guardar_producto"
             android:paddingVertical="16dp"
             app:layout_constraintTop_toBottomOf="@id/layout_image"
             app:layout_constraintStart_toStartOf="parent"
