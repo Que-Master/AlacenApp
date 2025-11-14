@@ -4,7 +4,7 @@
     <string name="app_name">AlacenApp</string>
 
     <!-- MainActivity -->
-    <string name="inicio">inicio</string>
+    <string name="Inicio">Inicio</string>
     <string name="_0">0</string>
     <string name="ver_alacena">Ver Alacena</string>
     <string name="lista_de_compras">Lista de Compras</string>

@@ -17,10 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.myapplication.DetallesActivity;
+import com.example.myapplication.view.DetallesActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.models.Producto;
 import com.example.myapplication.repository.FirebaseRepository;
+import com.example.myapplication.view.EditProductActivity;
 
 import java.util.HashSet;
 import java.util.List;
@@ -86,10 +87,10 @@ public class ComprasAdapter extends RecyclerView.Adapter<ComprasAdapter.ViewHold
             prefs.edit().putStringSet("productos_comprados", actualizados).apply();
         });
 
-        // Editar → DetallesActivity
+        // Editar → EditProductActivity
         holder.btnEditar.setOnClickListener(v -> {
-            Intent intent = new Intent(context, DetallesActivity.class);
-            intent.putExtra("codigo_barras", producto.getCodigoBarras());
+            Intent intent = new Intent(context, EditProductActivity.class);
+            intent.putExtra("producto", producto);
             context.startActivity(intent);
         });
 

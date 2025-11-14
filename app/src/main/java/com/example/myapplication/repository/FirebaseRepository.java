@@ -325,23 +325,33 @@ public class FirebaseRepository {
 
         switch (tipo) {
             case "creacion":
-                mensaje = "Ingresaste " + producto.getStock() + " " + producto.getNombre() + " a las " + hora;
+                mensaje = "Se ingresó " + producto.getStock() + " " + producto.getNombre() + " a las " + hora;
                 break;
 
-            case "actualizado":
-                mensaje = "Editaste " + producto.getNombre() + " a las " + hora;
+            case "entrada": // usado cuando se agrega 1 unidad desde el escáner
+                mensaje = "Se ingresó 1 " + producto.getNombre() + " a las " + hora;
+                break;
+
+            case "salida": // usado cuando se retira 1 unidad desde el escáner
+                mensaje = "Se retiró 1 " + producto.getNombre() + " a las " + hora;
                 break;
 
             case "cambio_stock":
-                mensaje = "Actualizaste el stock de " + producto.getNombre() + " (" + producto.getStock() + ") a las " + hora;
+                mensaje = "Stock actualizado de " + producto.getNombre() + " (" + producto.getStock() + ") a las " + hora;
+                break;
+
+            case "actualizado":
+                // ✅ Solo registrar si realmente cambió el stock
+                mensaje = "Información editada de " + producto.getNombre() + " a las " + hora;
                 break;
 
             case "eliminado":
+            case "eliminacion":
                 mensaje = "Eliminaste " + producto.getNombre() + " a las " + hora;
                 break;
 
             default:
-                mensaje = "Acción realizada sobre " + producto.getNombre() + " a las " + hora;
+                mensaje = "Acción sobre " + producto.getNombre() + " a las " + hora;
                 break;
         }
 
@@ -355,6 +365,7 @@ public class FirebaseRepository {
 
         ref.child(id).setValue(data);
     }
+
 
 
     private void guardarEstructuraCorrecta(Producto producto, long timestamp) {

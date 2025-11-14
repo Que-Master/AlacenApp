@@ -1,8 +1,9 @@
-package com.example.myapplication;
+package com.example.myapplication.view;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -11,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.BuildConfig;
+import com.example.myapplication.R;
 import com.example.myapplication.adapters.TransaccionesAdapter;
 import com.example.myapplication.models.Producto;
 import com.example.myapplication.models.Transaccion;
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         // BOTONES DE NAVEGACIÓN PRINCIPAL
         MaterialButton btnAlacena = findViewById(R.id.btn_ver_alacena);
         MaterialButton btnCompras = findViewById(R.id.btn_lista_compras);
+        ImageView btnWifi = findViewById(R.id.btn_wifi_setup);
 
         btnAlacena.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, AlacenaActivity.class);
@@ -70,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
 
         btnCompras.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, ComprasActivity.class);
+            startActivity(intent);
+        });
+
+        btnWifi.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, WifiSetupActivity.class);
             startActivity(intent);
         });
 

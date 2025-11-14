@@ -4,8 +4,15 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
 
     <application
         android:allowBackup="true"
@@ -17,22 +24,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
-            android:name=".DetallesActivity"
+            android:name=".view.WifiSetupActivity"
             android:exported="false" />
         <activity
-            android:name=".EditProductActivity"
+            android:name=".view.DetallesActivity"
             android:exported="false" />
         <activity
-            android:name=".AddProductActivity"
+            android:name=".view.EditProductActivity"
             android:exported="false" />
         <activity
-            android:name=".ComprasActivity"
+            android:name=".view.AddProductActivity"
             android:exported="false" />
         <activity
-            android:name=".AlacenaActivity"
+            android:name=".view.ComprasActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".view.AlacenaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

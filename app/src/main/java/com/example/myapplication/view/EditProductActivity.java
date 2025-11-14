@@ -1,18 +1,23 @@
-package com.example.myapplication;
+package com.example.myapplication.view;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.myapplication.R;
 import com.example.myapplication.models.Producto;
 import com.example.myapplication.repository.FirebaseRepository;
 import com.google.android.material.button.MaterialButton;
@@ -22,6 +27,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class EditProductActivity extends AppCompatActivity {
 
@@ -34,17 +44,65 @@ public class EditProductActivity extends AppCompatActivity {
     private Producto productoActual;
     private Uri nuevaImagenUri;
 
+    // ----------------------------
+    //  PICKER DE IMÁGENES
+    // ----------------------------
     private final ActivityResultLauncher<String> imagePickerLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+
                 if (uri != null) {
-                    nuevaImagenUri = uri;
-                    Glide.with(this)
-                            .load(uri)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(imagePreview);
+
+                    Log.d("EditProduct", "📸 Imagen seleccionada: " + uri);
+
+                    try {
+                        InputStream is = getContentResolver().openInputStream(uri);
+                        int sizeMB = is.available() / (1024 * 1024);
+                        is.close();
+
+                        Log.d("EditProduct", "📦 Peso imagen: " + sizeMB + " MB");
+
+                        Uri imagenProcesada;
+
+                        if (sizeMB > 5) {
+                            Toast.makeText(this,
+                                    "La imagen supera los 5 MB (" + sizeMB + " MB). Se comprimirá automáticamente.",
+                                    Toast.LENGTH_LONG).show();
+
+                            imagenProcesada = comprimirImagen(uri);
+
+                        } else {
+                            imagenProcesada = copiarImagenLocal(uri);
+                        }
+
+                        nuevaImagenUri = imagenProcesada;
+
+                        if (nuevaImagenUri != null) {
+                            imagePreview.setImageURI(nuevaImagenUri);
+                        } else {
+                            Toast.makeText(this, "Error procesando imagen", Toast.LENGTH_SHORT).show();
+                        }
+
+                        try {
+                            getContentResolver().takePersistableUriPermission(
+                                    uri, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                            );
+                        } catch (Exception ignored) {}
+
+                    } catch (Exception e) {
+                        Toast.makeText(this,
+                                "Error leyendo imagen: " + e.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
+
+                } else {
+                    Toast.makeText(this, "No seleccionaste ninguna imagen", Toast.LENGTH_SHORT).show();
                 }
+
             });
 
+    // ----------------------------
+    //  ON CREATE
+    // ----------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +111,6 @@ public class EditProductActivity extends AppCompatActivity {
 
         repository = new FirebaseRepository(this);
 
-        // Inicializar vistas
         editName = findViewById(R.id.edit_name);
         editBrand = findViewById(R.id.edit_brand);
         editCategory = findViewById(R.id.edit_category);
@@ -65,20 +122,20 @@ public class EditProductActivity extends AppCompatActivity {
         btnSelectImage = findViewById(R.id.btn_select_image);
         btnUpdate = findViewById(R.id.btn_update_product);
 
-        // Recibir producto desde el intent
         productoActual = (Producto) getIntent().getSerializableExtra("producto");
 
         if (productoActual != null) {
             cargarDatosProductoFirebase(productoActual.getCodigoBarras());
         }
 
-        // Cambiar imagen
         btnSelectImage.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
 
-        // Guardar cambios
         btnUpdate.setOnClickListener(v -> actualizarProducto());
     }
 
+    // ----------------------------
+    // CARGAR DATOS
+    // ----------------------------
     private void cargarDatosProductoFirebase(String codigoBarras) {
         DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("productos_detalle")
@@ -87,17 +144,17 @@ public class EditProductActivity extends AppCompatActivity {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 if (!snapshot.exists()) {
                     Toast.makeText(EditProductActivity.this, "❌ Producto no encontrado", Toast.LENGTH_SHORT).show();
                     finish();
                     return;
                 }
 
-                // Crear objeto producto actualizado
                 productoActual = snapshot.getValue(Producto.class);
+
                 if (productoActual == null) return;
 
-                // Cargar valores
                 editName.setText(productoActual.getNombre());
                 editBrand.setText(productoActual.getMarca());
                 editCategory.setText(productoActual.getCategoria());
@@ -105,15 +162,14 @@ public class EditProductActivity extends AppCompatActivity {
                 editStock.setText(String.valueOf(productoActual.getStock()));
                 editBarcode.setText(productoActual.getCodigoBarras());
 
-                // Leer "stock_minimo" o "stockMinimo" según exista
                 Integer stockMinimo = snapshot.child("stock_minimo").getValue(Integer.class);
-                if (stockMinimo == null) {
+                if (stockMinimo == null)
                     stockMinimo = snapshot.child("stockMinimo").getValue(Integer.class);
-                }
+
                 editMinStock.setText(stockMinimo != null ? String.valueOf(stockMinimo) : "0");
 
-                // Imagen
                 String imagenUrl = snapshot.child("imagen_url").getValue(String.class);
+
                 if (imagenUrl != null && !imagenUrl.isEmpty()) {
                     Glide.with(EditProductActivity.this)
                             .load(imagenUrl)
@@ -133,20 +189,13 @@ public class EditProductActivity extends AppCompatActivity {
         });
     }
 
+    // ----------------------------
+    //  ACTUALIZAR
+    // ----------------------------
     private void actualizarProducto() {
+
         if (productoActual == null) return;
 
-        // Validaciones básicas
-        if (editName.getText().toString().trim().isEmpty() ||
-                editBrand.getText().toString().trim().isEmpty() ||
-                editCategory.getText().toString().trim().isEmpty() ||
-                editCantidad.getText().toString().trim().isEmpty() ||
-                editBarcode.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Completa todos los campos obligatorios", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Actualizar datos
         productoActual.setNombre(editName.getText().toString().trim());
         productoActual.setMarca(editBrand.getText().toString().trim());
         productoActual.setCategoria(editCategory.getText().toString().trim());
@@ -155,10 +204,71 @@ public class EditProductActivity extends AppCompatActivity {
         productoActual.setStockMinimo(Integer.parseInt(editMinStock.getText().toString().trim()));
         productoActual.setCodigoBarras(editBarcode.getText().toString().trim());
 
-        // Enviar a Firebase
         repository.actualizarProducto(productoActual, nuevaImagenUri);
 
         Toast.makeText(this, "Producto actualizado correctamente ✅", Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+    // ----------------------------
+    //  COPIAR IMAGEN
+    // ----------------------------
+    private Uri copiarImagenLocal(Uri originalUri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(originalUri);
+            File tempFile = new File(getCacheDir(), "temp_edit_" + System.currentTimeMillis() + ".jpg");
+            OutputStream outputStream = new FileOutputStream(tempFile);
+
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+            inputStream.close();
+            outputStream.close();
+
+            return Uri.fromFile(tempFile);
+
+        } catch (Exception e) {
+            Log.e("EditProduct", "❌ Error copiando imagen: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // ----------------------------
+    //  COMPRIMIR IMAGEN
+    // ----------------------------
+    private Uri comprimirImagen(Uri originalUri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(originalUri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            inputStream.close();
+
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            int maxSize = 1280;
+
+            if (width > maxSize || height > maxSize) {
+                float ratio = Math.min((float) maxSize / width, (float) maxSize / height);
+                width = Math.round(width * ratio);
+                height = Math.round(height * ratio);
+                bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+            }
+
+            File tempFile = new File(getCacheDir(), "compressed_edit_" + System.currentTimeMillis() + ".jpg");
+            FileOutputStream fos = new FileOutputStream(tempFile);
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
+            fos.flush();
+            fos.close();
+
+            return Uri.fromFile(tempFile);
+
+        } catch (Exception e) {
+            Log.e("EditProduct", "❌ Error comprimiendo imagen: " + e.getMessage());
+            return null;
+        }
     }
 }

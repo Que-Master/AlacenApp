@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".MainActivity">
+    tools:context=".view.MainActivity">
 
     <TextView
         android:id="@+id/text_title"
@@ -13,11 +13,27 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:layout_marginTop="24dp"
-        android:text="@string/inicio"
+        android:text="@string/Inicio"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Botón para ir a la configuración WiFi -->
+    <ImageView
+        android:id="@+id/btn_wifi_setup"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_wifi"
+        android:contentDescription="Configurar WiFi"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:tint="@color/primary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"/>
+
 
     <LinearLayout
         android:id="@+id/layout_summary"

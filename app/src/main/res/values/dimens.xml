@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Espaciados básicos -->
+    <dimen name="padding_default">16dp</dimen>
+    <dimen name="padding_large">24dp</dimen>
+
+    <!-- Bordes redondeados -->
+    <dimen name="radius_default">16dp</dimen>
+
+    <!-- Alto para listas (opcional) -->
+    <dimen name="wifi_list_height">180dp</dimen>
+
+</resources>

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="?attr/colorSurface"
-    tools:context=".DetallesActivity">
+    tools:context=".view.DetallesActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

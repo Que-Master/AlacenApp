@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.myapplication.DetallesActivity;
-import com.example.myapplication.EditProductActivity;
+import com.example.myapplication.view.DetallesActivity;
+import com.example.myapplication.view.EditProductActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.models.Producto;
 import com.example.myapplication.repository.FirebaseRepository;

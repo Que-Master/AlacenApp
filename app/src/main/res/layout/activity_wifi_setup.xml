@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@color/white">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/txtTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Configurar WiFi del Dispositivo"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Campo SSID -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutSSID"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/txtTitulo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtSSID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre de la red (SSID)" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Campo Password -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutPass"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:passwordToggleEnabled="true"
+        app:layout_constraintTop_toBottomOf="@id/layoutSSID"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="Contraseña" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Botón para escanear redes -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnScan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Escanear redes"
+        app:layout_constraintTop_toBottomOf="@id/layoutPass"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+    <!-- Lista de redes encontradas -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerWifi"
+        android:layout_width="0dp"
+        android:layout_height="180dp"
+        android:background="@drawable/rounded_bg"
+        android:padding="10dp"
+        app:layout_constraintTop_toBottomOf="@id/btnScan"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"/>
+
+    <!-- Botón para enviar al ESP8266 -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGuardarWifi"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Guardar y Conectar"
+        style="@style/Widget.MaterialComponents.Button"
+        app:layout_constraintTop_toBottomOf="@id/recyclerWifi"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="25dp"/>
+
+
+    <!-- Texto de estado -->
+    <TextView
+        android:id="@+id/txtEstado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Estado: esperando"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/btnGuardarWifi"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="12dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

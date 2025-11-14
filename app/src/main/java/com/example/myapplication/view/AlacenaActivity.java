@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.R;
 import com.example.myapplication.adapters.ProductoAdapter;
 import com.example.myapplication.models.Producto;
 import com.example.myapplication.repository.FirebaseRepository;
