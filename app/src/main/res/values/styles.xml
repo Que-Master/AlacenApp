@@ -15,5 +15,10 @@
         <!-- Para que los TextInputLayout tengan el estilo moderno -->
         <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
     </style>
+    <style name="RoundedCardShape" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">18dp</item>
+    </style>
+
 
 </resources>

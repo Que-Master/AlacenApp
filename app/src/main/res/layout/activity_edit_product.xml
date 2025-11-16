@@ -15,18 +15,22 @@
         android:padding="24dp">
 
         <!-- Título -->
+
+        <!-- Nombre -->
+
         <TextView
             android:id="@+id/text_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
             android:text="@string/modificar_producto"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="26sp"
             android:textStyle="bold"
-            android:textColor="?attr/colorOnSurface"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Nombre -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_name"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"

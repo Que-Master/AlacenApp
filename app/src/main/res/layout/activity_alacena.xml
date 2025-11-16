@@ -11,20 +11,22 @@
     tools:context=".view.AlacenaActivity">
 
     <!-- Título -->
+
+    <!-- Contenedor barra + botón -->
+
     <TextView
         android:id="@+id/text_title_alacena"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:text="@string/mi_alacena"
+        android:textColor="@color/text_primary"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="@color/text_primary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Contenedor barra + botón -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container_search"
         android:layout_width="0dp"

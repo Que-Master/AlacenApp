@@ -15,20 +15,24 @@
         android:padding="24dp">
 
         <!-- Nombre del producto -->
+
+        <!-- Imagen -->
+
         <TextView
             android:id="@+id/text_nombre"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="@string/nombre_del_producto"
             android:textColor="?attr/colorOnSurface"
             android:textSize="26sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Imagen -->
         <ImageView
             android:id="@+id/image_product"
             android:layout_width="0dp"

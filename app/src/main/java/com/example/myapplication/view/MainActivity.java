@@ -18,6 +18,7 @@ import com.example.myapplication.adapters.TransaccionesAdapter;
 import com.example.myapplication.models.Producto;
 import com.example.myapplication.models.Transaccion;
 import com.example.myapplication.repository.FirebaseRepository;
+import com.example.myapplication.utils.DevicePrefs;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -44,14 +45,13 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-
-        // CONFIGURACIÓN DE FIREBASE
+        // CONFIGURACIÓN FIREBASE
         String apiKey = BuildConfig.FIREBASE_API_KEY;
-        Log.d("FIREBASE_KEY", "✅ Clave detectada: " + (apiKey.isEmpty() ? "No encontrada" : "Cargada correctamente"));
+        Log.d("FIREBASE_KEY", apiKey.isEmpty() ? "No encontrada" : "Cargada OK");
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setApiKey(apiKey)
-                .setApplicationId("1:1234567890:android:abcdef123456") // ficticio, solo para inicializar
+                .setApplicationId("1:1234567890:android:abcdef123456")
                 .setDatabaseUrl("https://alacena-inteligente-iot-default-rtdb.firebaseio.com/")
                 .build();
 
@@ -61,59 +61,63 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-
-        // BOTONES DE NAVEGACIÓN PRINCIPAL
+        // BOTONES
         MaterialButton btnAlacena = findViewById(R.id.btn_ver_alacena);
         MaterialButton btnCompras = findViewById(R.id.btn_lista_compras);
         ImageView btnWifi = findViewById(R.id.btn_wifi_setup);
 
-        btnAlacena.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, AlacenaActivity.class);
-            startActivity(intent);
-        });
+        btnAlacena.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, AlacenaActivity.class))
+        );
 
-        btnCompras.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ComprasActivity.class);
-            startActivity(intent);
-        });
+        btnCompras.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, ComprasActivity.class))
+        );
 
+        // BOTÓN WIFI: lógica nueva
         btnWifi.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, WifiSetupActivity.class);
-            startActivity(intent);
+            String ipGuardada = DevicePrefs.obtenerIP(this);
+
+            if (ipGuardada == null || ipGuardada.isEmpty()) {
+                // No hay dispositivo configurado → abrir configuración WiFi
+                startActivity(new Intent(MainActivity.this, WifiSetupActivity.class));
+            } else {
+                // Hay IP guardada → ver estado del dispositivo
+                Intent i = new Intent(MainActivity.this, DeviceStatusActivity.class);
+                i.putExtra("DEVICE_IP", ipGuardada);
+                startActivity(i);
+            }
         });
 
-
-        // RECYCLERVIEW DE TRANSACCIONES
+        // RECYCLER TRANSACCIONES
         recyclerView = findViewById(R.id.recycler_history);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new TransaccionesAdapter(lista);
         recyclerView.setAdapter(adapter);
 
-        // LECTURA DE SOLO LAS 25 ÚLTIMAS TRANSACCIONES
         DatabaseReference transRef = database.getReference("transacciones");
         transRef.orderByChild("timestamp").limitToLast(25)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        lista.clear(); // usamos la lista final declarada arriba
+                        lista.clear();
                         for (DataSnapshot item : snapshot.getChildren()) {
                             Transaccion t = item.getValue(Transaccion.class);
                             if (t != null) lista.add(t);
                         }
 
-                        // Ordenar de más reciente a más antigua
                         Collections.sort(lista, (a, b) -> Long.compare(b.getTimestamp(), a.getTimestamp()));
                         adapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("Firebase", "❌ Error al leer transacciones: " + error.getMessage());
+                        Log.e("Firebase", "Error: " + error.getMessage());
                     }
                 });
 
-        // CONTADORES DE PRODUCTOS
+        // CONTADORES PRODUCTOS
         TextView textTotalProductos = findViewById(R.id.text_total_productos);
         TextView textProductosAgotados = findViewById(R.id.text_productos_agotados);
 
@@ -126,15 +130,8 @@ public class MainActivity extends AppCompatActivity {
                 int faltantes = 0;
 
                 for (Producto p : listaProductos) {
-                    // Contar productos disponibles (stock mayor a 0)
-                    if (p.getStock() > 0) {
-                        disponibles++;
-                    }
-
-                    // Contar faltantes o bajo stock
-                    if (p.getStock() == 0 || p.getStock() < p.getStockMinimo()) {
-                        faltantes++;
-                    }
+                    if (p.getStock() > 0) disponibles++;
+                    if (p.getStock() == 0 || p.getStock() < p.getStockMinimo()) faltantes++;
                 }
 
                 final int totalDisponibles = disponibles;
@@ -148,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(String error) {
-                Log.e("Firebase", "Error al contar productos: " + error);
+                Log.e("Firebase", "Error al contar: " + error);
             }
         });
     }
