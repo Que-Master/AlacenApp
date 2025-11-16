@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
     android:background="?attr/colorSurface"
+    android:fillViewport="true"
     tools:context=".view.DetallesActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,14 +19,14 @@
             android:id="@+id/text_nombre"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="@string/nombre_del_producto"
             android:textColor="?attr/colorOnSurface"
             android:textSize="26sp"
             android:textStyle="bold"
-            android:gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Imagen -->
         <ImageView
@@ -34,13 +34,13 @@
             android:layout_width="0dp"
             android:layout_height="220dp"
             android:layout_marginTop="16dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/imagen_del_producto"
-            android:background="#E0E0E0"
+            android:background="@drawable/rounded_bg"
             android:clipToOutline="true"
-            app:layout_constraintTop_toBottomOf="@id/text_nombre"
+            android:contentDescription="@string/imagen_del_producto"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/text_nombre" />
 
         <!-- Marca -->
         <com.google.android.material.textfield.TextInputLayout
@@ -50,9 +50,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:hint="@string/marca"
-            app:layout_constraintTop_toBottomOf="@id/image_product"
+            app:boxBackgroundColor="?attr/colorSurface"
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/image_product">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_marca"
@@ -69,9 +71,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/categoria"
-            app:layout_constraintTop_toBottomOf="@id/input_layout_marca"
+            app:boxBackgroundColor="?attr/colorSurface"
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/input_layout_marca">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_categoria"
@@ -88,9 +92,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/cantidad"
-            app:layout_constraintTop_toBottomOf="@id/input_layout_categoria"
+            app:boxBackgroundColor="?attr/colorSurface"
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/input_layout_categoria">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_cantidad"
@@ -107,9 +113,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/stock_actual"
-            app:layout_constraintTop_toBottomOf="@id/input_layout_cantidad"
+            app:boxBackgroundColor="?attr/colorSurface"
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/input_layout_cantidad">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_stock"
@@ -126,9 +134,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/stock_minimo"
-            app:layout_constraintTop_toBottomOf="@id/input_layout_stock"
+            app:boxBackgroundColor="?attr/colorSurface"
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/input_layout_stock">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_stock_minimo"
@@ -145,9 +155,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/codigo_de_barras"
-            app:layout_constraintTop_toBottomOf="@id/input_layout_stock_minimo"
+            app:boxBackgroundColor="?attr/colorSurface"
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/input_layout_stock_minimo">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_codigo_barras"
@@ -160,39 +172,41 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="24dp"
+            android:orientation="horizontal"
             android:weightSum="2"
-            app:layout_constraintTop_toBottomOf="@id/input_layout_codigo_barras"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/input_layout_codigo_barras">
 
+            <!-- EDITAR -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
+                android:icon="@drawable/ic_edit"
+                android:paddingVertical="12dp"
                 android:text="@string/editar"
                 android:textAllCaps="false"
-                android:icon="@drawable/ic_edit"
-                app:iconTint="@color/white"
+                app:backgroundTint="@color/primary"
                 app:cornerRadius="12dp"
-                app:backgroundTint="@color/teal_700"
-                android:layout_marginEnd="8dp"
-                android:paddingVertical="12dp" />
+                app:iconTint="@color/white" />
 
+            <!-- ELIMINAR -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_delete"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:icon="@drawable/ic_delete"
+                android:paddingVertical="12dp"
                 android:text="@string/eliminar"
                 android:textAllCaps="false"
-                android:icon="@drawable/ic_delete"
-                app:iconTint="@color/white"
-                app:cornerRadius="12dp"
                 app:backgroundTint="@color/red"
-                android:paddingVertical="12dp" />
+                app:cornerRadius="12dp"
+                app:iconTint="@color/white" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

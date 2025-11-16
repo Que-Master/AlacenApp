@@ -44,7 +44,7 @@
             app:layout_constraintTop_toTopOf="@id/image_producto"
             app:layout_constraintEnd_toStartOf="@id/check_comprado" />
 
-        <!-- Detalle (categoría + cantidad) -->
+        <!-- Detalle -->
         <TextView
             android:id="@+id/text_detalle"
             android:layout_width="0dp"
@@ -58,7 +58,7 @@
             app:layout_constraintTop_toBottomOf="@id/text_nombre"
             app:layout_constraintEnd_toStartOf="@id/check_comprado" />
 
-        <!-- Checkbox: producto comprado -->
+        <!-- Checkbox -->
         <CheckBox
             android:id="@+id/check_comprado"
             android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Botones Editar / Eliminar -->
+        <!-- Botones -->
         <LinearLayout
             android:id="@+id/layout_botones"
             android:layout_width="wrap_content"
@@ -87,7 +87,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/editar"
                 android:src="@drawable/ic_edit"
-                app:tint="@color/teal_700"
+                app:tint="#FFC107"
                 android:padding="8dp" />
 
             <ImageButton

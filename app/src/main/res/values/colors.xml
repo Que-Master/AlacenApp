@@ -1,17 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- PALETA PRINCIPAL -->
+    <color name="primary">#1976D2</color>
+    <color name="primary_dark">#0D47A1</color>
+    <color name="primary_light">#63A4FF</color>
+
+    <!-- NOMBRE CONSISTENTE (USADO POR MATERIAL) -->
+    <color name="primaryDark">#0D47A1</color>
+
+    <color name="secondary">#03DAC5</color>
+    <color name="secondary_dark">#00A896</color>
+
+    <!-- SUPERFICIES -->
+    <color name="background_light">#F5F7FA</color>
+    <color name="surface_light">#FFFFFF</color>
+    <color name="surface_variant_light">#E5E7EB</color>
+
+    <!-- TEXTO -->
+    <color name="text_primary">#000000</color>
+    <color name="text_secondary">#545454</color>
+
+    <!-- OTROS -->
     <color name="red">#E53935</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="teal_200">#80CBC4</color>
-    <color name="teal_500">#009688</color>
+
+    <!-- USADO POR TU XML -->
     <color name="teal_700">#00796B</color>
-    <color name="teal_900">#004D40</color>
-    <color name="primary">#1976D2</color>
-    <color name="primaryDark">#004BA0</color>
-    <color name="secondary">#03DAC5</color>
-    <color name="gray_bg">#EFEFEF</color>
-
-
 
 </resources>

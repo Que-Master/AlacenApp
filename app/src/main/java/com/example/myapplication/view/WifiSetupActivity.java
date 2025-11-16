@@ -35,6 +35,8 @@ public class WifiSetupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_setup);
 
+        pedirPermisos();
+
         edtSSID = findViewById(R.id.edtSSID);
         edtPassword = findViewById(R.id.edtPassword);
         txtEstado = findViewById(R.id.txtEstado);
@@ -60,10 +62,18 @@ public class WifiSetupActivity extends AppCompatActivity {
         });
     }
 
+    private void pedirPermisos() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_WIFI_STATE,
+                    android.Manifest.permission.CHANGE_WIFI_STATE,
+                    android.Manifest.permission.CHANGE_NETWORK_STATE,
+                    android.Manifest.permission.NEARBY_WIFI_DEVICES
+            }, 101);
+        }
+    }
 
-    // ==============================================
-    // ANDROID 10+ (Q o superior)
-    // ==============================================
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void conectarAndroid10(Runnable onConnected) {
 
@@ -80,21 +90,19 @@ public class WifiSetupActivity extends AppCompatActivity {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         ConnectivityManager.NetworkCallback callback = new ConnectivityManager.NetworkCallback() {
-
             @Override
             public void onAvailable(Network network) {
                 cm.bindProcessToNetwork(network);
-
                 runOnUiThread(() -> {
                     txtEstado.setText("Conectado al AP del ESP8266. Enviando datos...");
-                    onConnected.run(); // ENVÍA SSID Y PASSWORD AL ESP8266
+                    onConnected.run();
                 });
             }
 
             @Override
             public void onUnavailable() {
                 runOnUiThread(() -> {
-                    txtEstado.setText("Error: No se pudo conectar al AP del ESP");
+                    txtEstado.setText("Error al conectar al AP.");
                     Toast.makeText(WifiSetupActivity.this, "Error al conectar", Toast.LENGTH_SHORT).show();
                 });
             }
@@ -103,10 +111,6 @@ public class WifiSetupActivity extends AppCompatActivity {
         cm.requestNetwork(request, callback);
     }
 
-
-    // ==============================================
-    // ANDROID 9 O MENOS
-    // ==============================================
     private void conectarLegacy() {
         WifiConfiguration config = new WifiConfiguration();
         config.SSID = "\"AlacenaSetup\"";
@@ -119,13 +123,9 @@ public class WifiSetupActivity extends AppCompatActivity {
         wm.enableNetwork(id, true);
         wm.reconnect();
 
-        txtEstado.setText("Conectado al AP (modo legacy). Enviando datos...");
+        txtEstado.setText("Conectado al AP (legacy). Enviando datos...");
     }
 
-
-    // ==============================================
-    // ENVIAR SSID Y PASSWORD AL ESP8266
-    // ==============================================
     private void enviarCredencialesALaAlacena(String ssid, String password) {
 
         new Thread(() -> {

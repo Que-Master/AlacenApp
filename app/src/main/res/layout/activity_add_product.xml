@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="@color/background_light"
     tools:context=".view.AddProductActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,6 +22,7 @@
             android:text="@string/agregar_nuevo_producto"
             android:textSize="26sp"
             android:textStyle="bold"
+            android:textColor="@color/text_primary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,6 +34,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:hint="@string/nombre_del_producto"
+            app:boxStrokeColor="@color/primary"
+            app:boxStrokeWidth="2dp"
+            app:hintTextColor="@color/text_secondary"
             app:layout_constraintTop_toBottomOf="@id/text_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -40,6 +45,7 @@
                 android:id="@+id/edit_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
                 android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -51,6 +57,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/marca"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/text_secondary"
             app:layout_constraintTop_toBottomOf="@id/input_layout_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -59,6 +67,7 @@
                 android:id="@+id/edit_brand"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
                 android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -70,6 +79,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/categoria"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/text_secondary"
             app:layout_constraintTop_toBottomOf="@id/input_layout_brand"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -78,6 +89,7 @@
                 android:id="@+id/edit_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
                 android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -89,6 +101,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/cantidad_ejemplo"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/text_secondary"
             app:layout_constraintTop_toBottomOf="@id/input_layout_category"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -97,6 +111,7 @@
                 android:id="@+id/edit_cantidad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -108,6 +123,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/stock_inicial_n_de_unidades"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/text_secondary"
             app:layout_constraintTop_toBottomOf="@id/input_layout_cantidad"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -116,6 +133,7 @@
                 android:id="@+id/edit_stock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
                 android:inputType="number"
                 tools:text="5" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -128,6 +146,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/stock_minimo_alerta_de_compra"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/text_secondary"
             app:layout_constraintTop_toBottomOf="@id/input_layout_stock"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -136,6 +156,7 @@
                 android:id="@+id/edit_min_stock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
                 android:inputType="number"
                 tools:text="1" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -148,6 +169,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/codigo_de_barras"
+            app:boxStrokeColor="@color/primary"
+            app:hintTextColor="@color/text_secondary"
             app:layout_constraintTop_toBottomOf="@id/input_layout_min_stock"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -156,6 +179,7 @@
                 android:id="@+id/edit_barcode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
                 android:inputType="number"
                 android:maxLength="13" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -177,7 +201,7 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:scaleType="centerCrop"
-                android:background="#EEEEEE"
+                android:background="@color/surface_variant_light"
                 android:contentDescription="@string/vista_previa_del_producto" />
 
             <com.google.android.material.button.MaterialButton
@@ -186,7 +210,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="@string/seleccionar_imagen"
-                style="@style/Widget.MaterialComponents.Button.TextButton" />
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:textColor="@color/primary" />
         </LinearLayout>
 
         <!-- Botón Guardar -->
@@ -199,8 +224,7 @@
             android:paddingVertical="16dp"
             app:layout_constraintTop_toBottomOf="@id/layout_image"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
