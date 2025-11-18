@@ -28,7 +28,7 @@
         android:padding="8dp"
         android:src="@drawable/ic_wifi"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:tint="?attr/colorPrimary"
+        app:tint="?attr/colorPrimary"
         android:contentDescription="Configurar WiFi"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"

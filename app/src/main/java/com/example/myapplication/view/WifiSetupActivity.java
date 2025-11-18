@@ -23,6 +23,8 @@ import android.widget.Toast;
 import com.example.myapplication.R;
 import com.example.myapplication.utils.DevicePrefs;
 
+import org.json.JSONObject; // IMPORTANTE: Necesario para leer el JSON del ESP
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -71,12 +73,10 @@ public class WifiSetupActivity extends AppCompatActivity {
                 conectarAndroid10(() -> enviarCredencialesALaAlacena(ssidReal, passReal));
             } else {
                 conectarLegacy();
-
-                // Esperar 2.5 segundos para que Android termine de conectarse
+                // Esperar 3.5 segundos para asegurar conexión en modelos viejos
                 new Handler().postDelayed(() -> {
                     enviarCredencialesALaAlacena(ssidReal, passReal);
-                }, 2500);
-
+                }, 3500);
             }
         });
     }
@@ -95,7 +95,6 @@ public class WifiSetupActivity extends AppCompatActivity {
     // --------------------------------------------------------------------
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void conectarAndroid10(Runnable onConnected) {
-
         WifiNetworkSpecifier specifier = new WifiNetworkSpecifier.Builder()
                 .setSsid(ESP_SSID)
                 .setWpa2Passphrase(ESP_PASS)
@@ -109,9 +108,7 @@ public class WifiSetupActivity extends AppCompatActivity {
         wifiCallback = new ConnectivityManager.NetworkCallback() {
             @Override
             public void onAvailable(Network network) {
-
                 connectivityManager.bindProcessToNetwork(network);
-
                 runOnUiThread(() -> {
                     txtEstado.setText("Conectado al AP del ESP. Enviando datos...");
                     onConnected.run();
@@ -125,7 +122,6 @@ public class WifiSetupActivity extends AppCompatActivity {
                 );
             }
         };
-
         connectivityManager.requestNetwork(request, wifiCallback);
     }
 
@@ -146,116 +142,99 @@ public class WifiSetupActivity extends AppCompatActivity {
     }
 
     // --------------------------------------------------------------------
+    // ESTA ES LA FUNCIÓN PRINCIPAL CORREGIDA
+    // --------------------------------------------------------------------
     private void enviarCredencialesALaAlacena(String ssid, String password) {
 
+        final String finalSsid = ssid;
+        final String finalPassword = password;
+
         new Thread(() -> {
+            HttpURLConnection conn = null;
+            String ipObtenida = null;
+            int responseCode = -1;
+
             try {
                 URL url = new URL("http://192.168.4.1/setwifi");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn = (HttpURLConnection) url.openConnection();
 
-                conn.setConnectTimeout(8000);
-                conn.setReadTimeout(8000);
+                // CORRECCIÓN 1: TIEMPOS DE ESPERA AUMENTADOS
+                conn.setConnectTimeout(10000); // 10 seg para conectar al ESP
+                conn.setReadTimeout(25000);    // 25 seg para esperar la respuesta (el ESP tarda ~15s probando wifi)
+
                 conn.setRequestMethod("POST");
                 conn.setDoOutput(true);
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-                String body = "ssid=" + ssid + "&password=" + password;
+                String body = "ssid=" + finalSsid + "&password=" + finalPassword;
                 OutputStream os = conn.getOutputStream();
                 os.write(body.getBytes());
                 os.close();
 
-                int response = conn.getResponseCode();
+                responseCode = conn.getResponseCode();
+
+                if (responseCode == 200) {
+                    // Leer respuesta
+                    try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+                        StringBuilder sb = new StringBuilder();
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            sb.append(line);
+                        }
+
+                        // CORRECCIÓN 2: PARSEAR JSON EN LUGAR DE TEXTO PLANO
+                        // El ESP envía: {"status":"ok", "ip":"192.168.X.X"}
+                        String jsonRespuesta = sb.toString();
+                        JSONObject json = new JSONObject(jsonRespuesta);
+
+                        if (json.has("ip")) {
+                            ipObtenida = json.getString("ip");
+                        }
+                    }
+                }
+
+                final int finalResponseCode = responseCode;
+                final String finalIpObtenida = ipObtenida;
 
                 runOnUiThread(() -> {
-                    if (response == 200) {
-                        txtEstado.setText("✔ Credenciales enviadas. Reiniciando ESP...");
-                        new Handler().postDelayed(this::obtenerInfoDespuesDeConfig, 5000);
+                    if (finalResponseCode == 200 && finalIpObtenida != null) {
+                        // ÉXITO REAL
+                        DevicePrefs.guardarIP(WifiSetupActivity.this, finalIpObtenida);
+                        txtEstado.setText("✔ Éxito. Nueva IP: " + finalIpObtenida);
+                        Toast.makeText(WifiSetupActivity.this, "WiFi Configurado Correctamente", Toast.LENGTH_LONG).show();
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && wifiCallback != null) {
+                            connectivityManager.unregisterNetworkCallback(wifiCallback);
+                        }
+                        finish(); // Volver a MainActivity
+
                     } else {
-                        txtEstado.setText("❌ Error al enviar datos (HTTP " + response + ")");
+                        // ERROR: El ESP respondió 400 (clave mal) o no devolvió IP
+                        txtEstado.setText("❌ Clave incorrecta o fallo de conexión.");
+                        Toast.makeText(WifiSetupActivity.this, "Verifica la contraseña", Toast.LENGTH_LONG).show();
                     }
                 });
 
+            } catch (java.net.SocketTimeoutException e) {
+                // Error específico de tiempo de espera
+                runOnUiThread(() -> txtEstado.setText("❌ Tiempo de espera agotado. El ESP tardó demasiado."));
             } catch (Exception e) {
-                runOnUiThread(() ->
-                        txtEstado.setText("❌ Error: " + e.getMessage())
-                );
+                // Otros errores
+                final String errorMsg = e.getMessage();
+                runOnUiThread(() -> txtEstado.setText("❌ Error: " + errorMsg));
+            } finally {
+                if (conn != null) conn.disconnect();
             }
         }).start();
     }
 
-    // --------------------------------------------------------------------
-    private void obtenerInfoDespuesDeConfig() {
-
-        new Thread(() -> {
-
-            int intentos = 0;
-            boolean exito = false;
-
-            while (intentos < 5 && !exito) {
-                try {
-                    URL url = new URL("http://192.168.4.1/info");
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setConnectTimeout(5000);
-
-                    if (conn.getResponseCode() != 200) {
-                        throw new Exception("ESP aún no responde");
-                    }
-
-                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    StringBuilder sb = new StringBuilder();
-                    String line;
-
-                    while ((line = br.readLine()) != null)
-                        sb.append(line).append("\n");
-
-                    br.close();
-
-                    String[] rows = sb.toString().trim().split("\n");
-                    String modo = rows[0].replace("MODE:", "").trim();
-
-                    if (modo.equals("STA") && rows.length >= 3) {
-                        String ip = rows[2].replace("IP:", "").trim();
-
-                        runOnUiThread(() -> {
-                            DevicePrefs.guardarIP(WifiSetupActivity.this, ip);
-                            Toast.makeText(this, "✔ Dispositivo configurado y guardado (" + ip + ")", Toast.LENGTH_LONG).show();
-                            finish();
-                        });
-
-                        exito = true;
-
-                    } else {
-                        // Aún en AP o formato extraño
-                        intentos++;
-                        Thread.sleep(2000);
-                    }
-
-                } catch (Exception e) {
-                    intentos++;
-                    try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
-                }
-            }
-
-            if (!exito) {
-                runOnUiThread(() ->
-                        txtEstado.setText("⚠ El ESP aún no está disponible o no logró conectarse al WiFi.")
-                );
-            }
-
-        }).start();
-    }
-
-
-    // --------------------------------------------------------------------
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             connectivityManager.bindProcessToNetwork(null);
         }
-
-        if (wifiCallback != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            connectivityManager.unregisterNetworkCallback(wifiCallback);
-        }
+        // Nota: No desregistramos el callback aquí si ya se hizo en éxito,
+        // pero por seguridad se puede dejar un try-catch si se desea.
     }
 }
