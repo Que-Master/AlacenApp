@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Color cuando el ítem está seleccionado (checked) -->
+    <item android:color="@color/nav_item_foreground_selected" android:state_checked="true" />
+
+    <!-- Color por defecto cuando NO está seleccionado -->
+    <item android:color="@color/nav_item_foreground_normal" />
+</selector>

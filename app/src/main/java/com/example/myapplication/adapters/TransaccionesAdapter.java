@@ -14,19 +14,17 @@ import com.example.myapplication.R;
 import com.example.myapplication.models.Transaccion;
 
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Date;
 
 public class TransaccionesAdapter extends RecyclerView.Adapter<TransaccionesAdapter.ViewHolder> {
 
     private final List<Transaccion> lista;
 
     public TransaccionesAdapter(List<Transaccion> lista) {
-        // Ordenar de más reciente a más antigua
-        Collections.reverse(lista);
-            this.lista = lista;
+        // La lista ya viene ordenada desde el MainActivity, así que la usamos directo
+        this.lista = lista;
     }
 
     @NonNull
@@ -41,49 +39,85 @@ public class TransaccionesAdapter extends RecyclerView.Adapter<TransaccionesAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Transaccion t = lista.get(position);
 
-        // Formatear hora legible
+        // 1. Formatear hora para mostrarla al final del mensaje (opcional pero útil)
         Date fecha = new Date(t.getTimestamp());
         SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm", Locale.getDefault());
         String hora = formatoHora.format(fecha);
 
-        // Mensaje (ya viene listo desde Firebase)
-        String texto = t.getMensaje() != null && !t.getMensaje().isEmpty()
-                ? t.getMensaje()
-                : "Acción sobre " + t.getProducto() + " a las " + hora;
+        // 2. Construir el mensaje personalizado
+        String nombreProducto = (t.getProducto() != null) ? t.getProducto() : "Producto desconocido";
+        String tipo = (t.getTipo() != null) ? t.getTipo() : "";
+        String mensajeFinal;
 
-        // Icono y color según tipo
-        int icono;
-        int colorIcono;
-
-        switch (t.getTipo()) {
+        // Lógica de mensajes según tu requerimiento
+        switch (tipo) {
             case "creacion":
+                mensajeFinal = "Nuevo producto: " + nombreProducto;
+                break;
             case "entrada":
-                icono = R.drawable.ic_up;
-                colorIcono = Color.parseColor("#4CAF50"); // Verde
+                mensajeFinal = "Has ingresado: " + nombreProducto;
                 break;
-
+            case "salida":
+                mensajeFinal = "Has retirado: " + nombreProducto;
+                break;
             case "cambio_stock":
-            case "actualizado":
-                icono = R.drawable.ic_edit;
-                colorIcono = Color.parseColor("#FFC107"); // Amarillo
+                // Intentamos obtener el stock final. Si tu modelo no tiene getStockFinal(),
+                // asegúrate de agregarlo o cambiarlo por getCambio()
+                int stock = t.getStock_final();
+                mensajeFinal = "Stock actualizado: " + nombreProducto + " (" + stock + ")";
                 break;
-
+            case "actualizado":
+                mensajeFinal = "Producto modificado: " + nombreProducto;
+                break;
             case "eliminado":
             case "eliminacion":
-                icono = R.drawable.ic_delete;
-                colorIcono = Color.parseColor("#F44336"); // Rojo
+                mensajeFinal = "Producto eliminado: " + nombreProducto;
                 break;
-
             default:
-                icono = R.drawable.ic_info;
-                colorIcono = Color.parseColor("#2196F3"); // Azul
+                // Fallback para tipos desconocidos
+                mensajeFinal = "Acción: " + tipo + " - " + nombreProducto;
                 break;
         }
 
-        // Asignar valores al ViewHolder
-        holder.textDescripcion.setText(texto);
-        holder.icon.setImageResource(icono);
-        holder.icon.setColorFilter(colorIcono);
+        // Agregamos la hora al final para contexto
+        holder.textDescripcion.setText(mensajeFinal + " • " + hora);
+
+
+        // 3. Configurar Iconos y Colores
+        int iconoRes;
+        int colorRes;
+
+        switch (tipo) {
+            case "creacion":
+                iconoRes = R.drawable.ic_agregar; // Usamos el + que ya tienes
+                colorRes = Color.parseColor("#2E7D32"); // Verde oscuro
+                break;
+            case "entrada":
+                iconoRes = R.drawable.ic_up; // Flecha arriba nativa
+                colorRes = Color.parseColor("#4CAF50"); // Verde
+                break;
+            case "salida":
+                iconoRes = R.drawable.ic_down; // Flecha abajo nativa
+                colorRes = Color.parseColor("#F44336"); // Rojo
+                break;
+            case "cambio_stock":
+            case "actualizado":
+                iconoRes = R.drawable.ic_edit; // Lápiz de edición
+                colorRes = Color.parseColor("#FFC107"); // Ámbar/Amarillo
+                break;
+            case "eliminado":
+            case "eliminacion":
+                iconoRes = R.drawable.ic_delete; // Basurero
+                colorRes = Color.parseColor("#D32F2F"); // Rojo alerta
+                break;
+            default:
+                iconoRes = R.drawable.ic_info;
+                colorRes = Color.parseColor("#9E9E9E"); // Gris
+                break;
+        }
+
+        holder.icon.setImageResource(iconoRes);
+        holder.icon.setColorFilter(colorRes);
     }
 
     @Override

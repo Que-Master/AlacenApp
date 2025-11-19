@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- PALETA PRINCIPAL -->
+    <!-- PALETA PRINCIPAL (TUYOS) -->
     <color name="primary">#1976D2</color>
     <color name="primary_dark">#0D47A1</color>
     <color name="primary_light">#63A4FF</color>
@@ -28,5 +28,18 @@
 
     <!-- USADO POR TU XML -->
     <color name="teal_700">#00796B</color>
+
+    <!-- ===================================================== -->
+    <!-- NUEVOS: Estilo Gemini / Material 3 (PARA EL MENÚ)     -->
+    <!-- ===================================================== -->
+
+    <!-- Fondo lila/azul muy suave para la selección (La píldora) -->
+    <color name="nav_item_background_selected">#E8DEF8</color>
+
+    <!-- Color oscuro para el texto e icono cuando está seleccionado -->
+    <color name="nav_item_foreground_selected">#1D192B</color>
+
+    <!-- Color gris para texto e icono cuando NO está seleccionado -->
+    <color name="nav_item_foreground_normal">#49454F</color>
 
 </resources>

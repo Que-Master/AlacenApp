@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_wifi"
+            android:icon="@drawable/ic_wifi"
+            android:title="Cómo configurar WiFi" />
+
+        <item
+            android:id="@+id/nav_usar"
+            android:icon="@android:drawable/ic_menu_agenda"
+            android:title="Cómo usar la alacena" />
+
+        <item
+            android:id="@+id/nav_agregar"
+            android:icon="@android:drawable/ic_input_add"
+            android:title="Cómo agregar productos" />
+
+        <item
+            android:id="@+id/nav_eliminar"
+            android:icon="@android:drawable/ic_menu_delete"
+            android:title="Cómo eliminar" />
+
+        <item
+            android:id="@+id/nav_editar"
+            android:icon="@android:drawable/ic_menu_edit"
+            android:title="Cómo editar" />
+    </group>
+
+    <item android:title="Soporte">
+        <menu>
+            <item
+                android:id="@+id/nav_faq"
+                android:icon="@android:drawable/ic_menu_help"
+                android:title="Preguntas frecuentes" />
+            <item
+                android:id="@+id/nav_acerca"
+                android:icon="@android:drawable/ic_menu_info_details"
+                android:title="Acerca de la app" />
+        </menu>
+    </item>
+
+</menu>

@@ -19,6 +19,15 @@
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".view.AboutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.FaqActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.GuideActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.DeviceStatusActivity"
             android:exported="false" />
         <activity

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Estado Seleccionado: Píldora redondeada -->
+    <item android:state_checked="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/nav_item_background_selected"/>
+            <corners android:radius="24dp"/> <!-- Bordes muy curvos estilo Gemini -->
+        </shape>
+    </item>
+
+    <!-- Estado Normal: Transparente -->
+    <item android:drawable="@android:color/transparent"/>
+</selector>

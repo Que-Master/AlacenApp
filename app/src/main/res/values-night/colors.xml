@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- PRIMARIOS -->
+    <!-- PRIMARIOS (TUYOS) -->
     <color name="primary">#63A4FF</color>
     <color name="primary_dark">#0D47A1</color>
     <color name="primary_light">#90CAF9</color>
@@ -11,18 +11,32 @@
     <color name="secondary">#03DAC5</color>
     <color name="secondary_dark">#00A896</color>
 
-    <!-- SUPERFICIES -->
+    <!-- SUPERFICIES (TUYOS) -->
     <color name="background_light">#121212</color>
     <color name="surface_light">#1E1E1E</color>
     <color name="surface_variant_light">#2C2C2C</color>
 
-    <!-- TEXTO -->
+    <!-- TEXTO (TUYOS) -->
     <color name="text_primary">#FFFFFF</color>
     <color name="text_secondary">#CCCCCC</color>
 
-    <!-- OTROS -->
+    <!-- OTROS (TUYOS) -->
     <color name="red">#FF6B6B</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="teal_700">#00796B</color>
+
+    <!-- ===================================================== -->
+    <!-- NUEVOS: Estilo Gemini / Material 3 (MODO OSCURO)      -->
+    <!-- ===================================================== -->
+
+    <!-- Fondo seleccionado: Un morado/azul oscuro suave, sutil sobre el negro -->
+    <color name="nav_item_background_selected">#4F378B</color>
+
+    <!-- Texto seleccionado: Lila muy claro o blanco para resaltar -->
+    <color name="nav_item_foreground_selected">#EADDFF</color>
+
+    <!-- Texto normal: Gris claro para que sea legible sobre fondo oscuro -->
+    <color name="nav_item_foreground_normal">#CAC4D0</color>
 
 </resources>

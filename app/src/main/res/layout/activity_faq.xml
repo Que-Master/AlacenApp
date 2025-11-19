@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:padding="16dp">
+
+    <!-- Botón Atrás -->
+
+    <!-- Título -->
+
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Volver"
+        android:padding="12dp"
+        android:src="@android:drawable/ic_menu_revert"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/text_primary" />
+
+    <TextView
+        android:id="@+id/text_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Preguntas Frecuentes"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/btn_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_back"
+        app:layout_constraintBottom_toBottomOf="@id/btn_back" />
+
+    <!-- Contenido Desplazable -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/btn_back"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="32dp">
+
+            <!-- 1. LUZ ROJA -->
+            <TextView
+                android:text="¿Por qué parpadea la luz roja?"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/text_primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="Indica pérdida de conexión WiFi. Verifica tu router o reconfigura el WiFi tocando el ícono superior derecho en la pantalla principal."
+                android:textSize="16sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="4dp"
+                android:lineSpacingExtra="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- 2. CORTE DE LUZ -->
+            <TextView
+                android:text="¿Se borra el inventario si se va la luz?"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/text_primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="No. Toda la información está segura en la nube. La memoria del dispositivo es permanente y no se pierde al desconectarlo."
+                android:textSize="16sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="4dp"
+                android:lineSpacingExtra="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- 3. AGREGAR MANUAL -->
+            <TextView
+                android:text="¿Cómo agrego productos sin código?"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/text_primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="Usa la opción 'Agregar manual' (ícono +) dentro de la pantalla de 'Ver Inventario' para productos como frutas, verduras o pan."
+                android:textSize="16sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="4dp"
+                android:lineSpacingExtra="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- 4. FALLO ESCÁNER -->
+            <TextView
+                android:text="El escáner no lee mi producto"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/text_primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="Intenta limpiar suavemente el lente del escáner. Asegúrate de que haya buena luz y de acercar o alejar el producto lentamente (entre 10 y 20 cm)."
+                android:textSize="16sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="4dp"
+                android:lineSpacingExtra="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- 5. STOCK MÍNIMO (NUEVA) -->
+            <TextView
+                android:text="¿Para qué sirve el 'Stock Mínimo'?"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/text_primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="Es tu alerta personal. Si configuras un stock mínimo de 2 leches, la App te avisará automáticamente en rojo cuando te quede solo 1 o ninguna, para que recuerdes comprar más."
+                android:textSize="16sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="4dp"
+                android:lineSpacingExtra="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- 6. INTERNET (NUEVA) -->
+            <TextView
+                android:text="¿Funciona si se corta el internet?"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/text_primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="Podrás ver tu inventario en la App con la última información guardada, pero el escáner físico no podrá registrar nuevas entradas o salidas hasta que vuelva la conexión."
+                android:textSize="16sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="4dp"
+                android:lineSpacingExtra="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- 7. FAMILIA (NUEVA) -->
+            <TextView
+                android:text="¿Pueden usar la App varias personas?"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/text_primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="¡Sí! Todos en casa pueden instalar la App. Como la información vive en la nube, si alguien saca un producto, el inventario se actualiza en los celulares de todos al instante."
+                android:textSize="16sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="4dp"
+                android:lineSpacingExtra="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

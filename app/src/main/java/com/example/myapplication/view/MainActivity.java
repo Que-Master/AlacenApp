@@ -8,15 +8,19 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,6 +32,7 @@ import com.example.myapplication.models.Transaccion;
 import com.example.myapplication.repository.FirebaseRepository;
 import com.example.myapplication.utils.DevicePrefs;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -48,6 +53,12 @@ public class MainActivity extends AppCompatActivity {
     private static final String AP_ESP_SSID = "AlacenaSetup";
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 101;
 
+    // --- Componentes del Menú Lateral ---
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private ImageView btnMenuLateral;
+
+    // --- Componentes UI Generales ---
     private RecyclerView recyclerView;
     private TransaccionesAdapter adapter;
     private final List<Transaccion> lista = new ArrayList<>();
@@ -61,7 +72,35 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // CONFIGURACIÓN FIREBASE
+        // -----------------------------------------------------------
+        // 1. CONFIGURACIÓN DEL MENÚ LATERAL
+        // -----------------------------------------------------------
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        btnMenuLateral = findViewById(R.id.btn_menu_lateral);
+
+        // Abrir menú al tocar el botón hamburguesa
+        btnMenuLateral.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+
+        // Manejar clics en las opciones del menú
+        navigationView.setNavigationItemSelectedListener(this::manejarMenuLateral);
+
+        // Manejo del botón ATRÁS para cerrar el menú primero
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
+
+        // -----------------------------------------------------------
+        // 2. CONFIGURACIÓN FIREBASE
+        // -----------------------------------------------------------
         String apiKey = BuildConfig.FIREBASE_API_KEY;
         Log.d("FIREBASE_KEY", apiKey.isEmpty() ? "No encontrada" : "Cargada OK");
 
@@ -77,7 +116,9 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-        // BOTONES
+        // -----------------------------------------------------------
+        // 3. BOTONES Y NAVEGACIÓN
+        // -----------------------------------------------------------
         MaterialButton btnAlacena = findViewById(R.id.btn_ver_alacena);
         MaterialButton btnCompras = findViewById(R.id.btn_lista_compras);
         btnWifi = findViewById(R.id.btn_wifi_setup);
@@ -90,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, ComprasActivity.class))
         );
 
-        // BOTÓN WIFI: Lógica de comprobación inteligente
+        // Lógica del botón WiFi
         btnWifi.setOnClickListener(v -> {
             if (checkLocationPermission()) {
                 startWifiFlow();
@@ -99,7 +140,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // RECYCLER TRANSACCIONES
+        // -----------------------------------------------------------
+        // 4. LISTAS Y CONTADORES
+        // -----------------------------------------------------------
         recyclerView = findViewById(R.id.recycler_history);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -126,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        // CONTADORES DE PRODUCTOS
+        // Contadores
         TextView textTotalProductos = findViewById(R.id.text_total_productos);
         TextView textProductosAgotados = findViewById(R.id.text_productos_agotados);
 
@@ -160,109 +203,128 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // =================================================================
-    // LÓGICA DE FLUJO Y RED (CORREGIDA Y COMPLETADA)
+    // LÓGICA DEL MENÚ LATERAL (ACTUALIZADA A ACTIVITIES)
+    // =================================================================
+    private boolean manejarMenuLateral(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        Intent intent;
+
+        // Lanzamos las Activities correspondientes en lugar de mostrar Dialogs
+        if (id == R.id.nav_wifi) {
+            intent = new Intent(this, GuideActivity.class);
+            intent.putExtra("GUIDE_TYPE", "WIFI");
+            startActivity(intent);
+        } else if (id == R.id.nav_usar) {
+            intent = new Intent(this, GuideActivity.class);
+            intent.putExtra("GUIDE_TYPE", "USAR");
+            startActivity(intent);
+        } else if (id == R.id.nav_agregar) {
+            intent = new Intent(this, GuideActivity.class);
+            intent.putExtra("GUIDE_TYPE", "AGREGAR");
+            startActivity(intent);
+        } else if (id == R.id.nav_eliminar) {
+            intent = new Intent(this, GuideActivity.class);
+            intent.putExtra("GUIDE_TYPE", "ELIMINAR");
+            startActivity(intent);
+        } else if (id == R.id.nav_editar) {
+            intent = new Intent(this, GuideActivity.class);
+            intent.putExtra("GUIDE_TYPE", "EDITAR");
+            startActivity(intent);
+        } else if (id == R.id.nav_faq) {
+            startActivity(new Intent(this, FaqActivity.class));
+        } else if (id == R.id.nav_acerca) {
+            startActivity(new Intent(this, AboutActivity.class));
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    // =================================================================
+    // CICLO DE VIDA: Limpiar selección al volver (TU PEDIDO)
+    // =================================================================
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Esto desmarca la opción del menú cuando regresas de otra pantalla
+        if (navigationView != null) {
+            int size = navigationView.getMenu().size();
+            for (int i = 0; i < size; i++) {
+                navigationView.getMenu().getItem(i).setChecked(false);
+            }
+        }
+    }
+
+    // =================================================================
+    // LÓGICA DE FLUJO Y RED
     // =================================================================
 
-    /**
-     * Inicia el flujo de decisión inteligente al presionar el botón WiFi.
-     */
     private void startWifiFlow() {
         currentDeviceIp = DevicePrefs.obtenerIP(this);
 
-        // 1. Prioridad: ¿Está conectado directamente al AP de configuración?
         if (isPhoneConnectedToAP()) {
             Toast.makeText(this, "Conectado a red de Configuración.", Toast.LENGTH_SHORT).show();
             navigateToSetup();
             return;
         }
 
-        // 2. ¿Tenemos una IP guardada de una configuración anterior?
         if (currentDeviceIp == null || currentDeviceIp.isEmpty()) {
             Log.d(TAG, "No hay IP guardada. Navegando a configuración.");
-            Toast.makeText(this, "Configura tu dispositivo primero.", Toast.LENGTH_SHORT).show();
             navigateToSetup();
         } else {
-            // 3. Tenemos IP, pero ¿sigue ahí el dispositivo? Hacemos Ping.
             checkDeviceStatusAsync(currentDeviceIp);
         }
     }
 
-    /**
-     * Verifica si el celular está conectado a la red "AlacenaSetup".
-     */
     private boolean isPhoneConnectedToAP() {
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (wifiManager == null || !wifiManager.isWifiEnabled()) {
             return false;
         }
-
-        // Necesitamos permiso de ubicación para leer el SSID en Android 8.1+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return false;
         }
-
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         String currentSsid = wifiInfo.getSSID();
-
         if (currentSsid != null) {
-            // Android devuelve el SSID entre comillas (ej: "AlacenaSetup")
             String cleanSsid = currentSsid.replaceAll("^\"|\"$", "");
             return cleanSsid.equals(AP_ESP_SSID);
         }
         return false;
     }
 
-    /**
-     * Verifica asíncronamente si el ESP está vivo en la IP guardada.
-     */
     private void checkDeviceStatusAsync(String ip) {
         Toast.makeText(this, "Buscando dispositivo...", Toast.LENGTH_SHORT).show();
-
-        // Variable final para usar dentro del hilo
         final String targetIp = ip;
 
         new Thread(() -> {
             boolean isOnline = false;
-
             try {
-                // Usamos HttpURLConnection estándar (sin librerías externas como OkHttp)
-                // para mantener consistencia con el resto de la app.
                 URL url = new URL("http://" + targetIp + "/status");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-                // Timeout corto (3s): Si está en la red local, responde rápido.
-                // Si no responde rápido, asumimos que no está disponible.
                 conn.setConnectTimeout(3000);
                 conn.setReadTimeout(3000);
                 conn.setRequestMethod("GET");
-
                 int responseCode = conn.getResponseCode();
-
-                // El ESP devuelve 200 si está vivo (ya sea en STA o AP)
                 if (responseCode == 200) {
                     isOnline = true;
                 }
                 conn.disconnect();
-
             } catch (Exception e) {
                 Log.e(TAG, "Fallo al conectar con ESP: " + e.getMessage());
                 isOnline = false;
             }
 
             final boolean finalIsOnline = isOnline;
-
-            // Volver al hilo principal para navegar
             runOnUiThread(() -> {
                 if (finalIsOnline) {
-                    // ÉXITO: El dispositivo respondió, vamos a ver su estado
                     navigateToStatus();
                 } else {
-                    // FALLO: No respondió, probablemente cambió de IP o se desconectó
                     Toast.makeText(MainActivity.this, "Dispositivo no responde. Reconfigurar.", Toast.LENGTH_LONG).show();
                     navigateToSetup();
                 }
             });
-
         }).start();
     }
 
@@ -276,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void navigateToStatus() {
         Intent i = new Intent(MainActivity.this, DeviceStatusActivity.class);
-        i.putExtra("DEVICE_IP", currentDeviceIp); // Pasamos la IP confirmada
+        i.putExtra("DEVICE_IP", currentDeviceIp);
         startActivity(i);
     }
 
@@ -295,12 +357,9 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Si el usuario da permiso, intentamos el flujo de nuevo
                 startWifiFlow();
             } else {
-                Toast.makeText(this, "Ubicación requerida para detectar WiFi.", Toast.LENGTH_LONG).show();
-                // Sin permiso no podemos detectar el SSID "AlacenaSetup" fiablemente,
-                // así que enviamos a setup por defecto.
+                Toast.makeText(this, "Permiso de Ubicación requerido para verificar el WiFi.", Toast.LENGTH_LONG).show();
                 navigateToSetup();
             }
         }
